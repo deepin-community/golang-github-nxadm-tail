@@ -1,4 +1,13 @@
 #!/usr/bin/make -f
 
+export DH_GOLANG_INSTALL_EXTRA := README.md
+export DH_GOLANG_EXCLUDES := cmd vendor
+
 %:
-	dh $@
+	dh $@ --builddirectory=_build --buildsystem=golang --with=golang
+
+# Prune test artifacts left by the test suite:
+override_dh_auto_install: DIR=$(CURDIR)/_build/src/github.com/nxadm/tail
+override_dh_auto_install:
+	rm -rf $(DIR)/.test/
+	dh_auto_install
